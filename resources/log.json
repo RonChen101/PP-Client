@@ -1,0 +1,30 @@
+{
+    "data": [
+        {
+            "userName": "Lzc",
+            "log": [
+                {
+                    "time": "yyyy/MM/dd 12:23:56",
+                    "content": "第一条消息"
+                },
+                {
+                    "time": "yyyy/MM/dd 13:23:56",
+                    "content": "第二条消息"
+                }
+            ]
+        },
+        {
+            "userName": "Pyh",
+            "log": [
+                {
+                    "time": "yyyy/MM/dd 14:23:56",
+                    "content": "第一条消息"
+                },
+                {
+                    "time": "yyyy/MM/dd 15:23:56",
+                    "content": "第二条消息"
+                }
+            ]
+        }
+    ]
+}
