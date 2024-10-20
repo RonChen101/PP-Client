@@ -15,14 +15,16 @@ public class user implements userInterface {
         this.userName = name;
     }
 
-    //获取用户名
+    // 获取用户名
     @Override
     public String getName() {
+        if (hasName()) {
 
+        }
         return userName;
     }
 
-    //判断用户名是否存在
+    // 判断用户名是否存在
     @Override
     public boolean hasName() {
         if (userName == null || userName.isEmpty()) {
@@ -37,4 +39,3 @@ public class user implements userInterface {
         return true;
     }
 }
-
