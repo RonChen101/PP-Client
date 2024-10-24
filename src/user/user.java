@@ -1,4 +1,4 @@
-package PPClass;
+package user;
 
 interface userInterface {
     public abstract String getName();
