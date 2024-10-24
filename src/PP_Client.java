@@ -1,21 +1,36 @@
 import java.net.*;
-import user.user;
+import user.User;
 import java.util.*;
 import java.text.SimpleDateFormat;
 import org.json.JSONObject;
-import log.Manager;
 import java.io.*;
+
+import log.Manager;
+import gui.window;
 
 // 向服务器发送消息，保存到log.json文件中
 class sendMessage extends Thread {
+    private User user;
+    private String content;
+
+    public sendMessage(User user, String content) {
+        this.user = user;
+        this.content = content;
+    }
+
     @Override
     public void run() {
         try {
-            // 临时模拟输入
-            Scanner scanner;
+            // 判断是否有用户名
+            if (!user.hasName()) {
+                // 未来需要改成一个window类中的方法
+                user.setName("temp");
+                System.out.println("还没有名字哦");
+                System.exit(1);
+            }
 
-            // 用户名、时间、内容
-            String userName, time, content;
+            // 时间
+            String time;
 
             // 缓冲区
             byte[] buf = new byte[10000];
@@ -46,18 +61,10 @@ class sendMessage extends Thread {
                 writeLog.close();
             }
 
-            // 获取用户名和消息内容
-            scanner = new Scanner(System.in);
-            System.out.println("请输入用户名：");
-            userName = scanner.nextLine();
-            System.out.println("请输入您想发送的内容：");
-            content = scanner.nextLine();
-            scanner.close();
-
             // 创建JSON对象
             time = new SimpleDateFormat().format(new Date());
             jsonObject = new JSONObject();
-            jsonObject.put("userName", userName);
+            jsonObject.put("userName", user.getName());
             jsonObject.put("time", time);
             jsonObject.put("content", content);
 
@@ -75,7 +82,10 @@ class sendMessage extends Thread {
             logJson = new JSONObject(new String(buf));
 
             // 编辑本地Json
-            manager = new Manager(userName, logJson);
+            System.out.println(user.getName());
+            System.out.println(time);
+            System.out.println(content);
+            manager = new Manager(user.getName(), logJson);
             manager.add(time, content);
 
             // 写数据
@@ -91,7 +101,9 @@ class sendMessage extends Thread {
 
 public class PP_Client {
     public static void main(String args[]) {
-        sendMessage mySendM = new sendMessage();
+        User user = new User();
+        String content = "你好";
+        sendMessage mySendM = new sendMessage(user, content);
         mySendM.start();
     }
 }

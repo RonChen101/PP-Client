@@ -1,5 +1,7 @@
 package user;
 
+import java.io.*;
+
 interface userInterface {
     public abstract String getName();
 
@@ -8,10 +10,14 @@ interface userInterface {
     public abstract boolean setName(String name);
 }
 
-public class user implements userInterface {
+public class User implements userInterface {
     private String userName;
 
-    public user(String name) {
+    public User() {
+        this.userName = null;
+    }
+
+    public User(String name) {
         this.userName = name;
     }
 
@@ -19,23 +25,66 @@ public class user implements userInterface {
     @Override
     public String getName() {
         if (hasName()) {
-
+            return userName;
+        } else {
+            return null;
         }
-        return userName;
     }
 
     // 判断用户名是否存在
     @Override
     public boolean hasName() {
-        if (userName == null || userName.isEmpty()) {
-            System.out.println("用户名不存在");
+        if (userName != null) {
+            return true;
+        } else {
+            checkJson();
+            byte[] buf = new byte[1000];
+            try {
+                File userJSON = new File("resources/user.json");
+                if (userJSON.length() == 0) {
+                    return false;
+                } else {
+                    FileInputStream readUser = new FileInputStream("resources/user.json");
+                    readUser.read(buf);
+                    readUser.close();
+                    // 读文件还会把\0读出来
+                    this.userName = (new String(buf)).replace("\0", "");
+                    return true;
+                }
+            } catch (Exception e) {
+                System.err.println(e);
+            }
+        }
+        return false;
+    }
+
+    // 设置用户名
+    @Override
+    public boolean setName(String name) {
+        this.userName = name;
+        checkJson();
+        try {
+            FileOutputStream writeUser = new FileOutputStream("resources/user.json");
+            writeUser.write(name.getBytes());
+            writeUser.close();
+        } catch (Exception e) {
+            System.err.println(e);
         }
         return true;
     }
 
-    @Override
-    public boolean setName(String name) {
-        this.userName = name;
-        return true;
+    // 检查JSON文件
+    private void checkJson() {
+        // 文件操作相关的类
+        File folder = new File("resources");
+        File userJSON = new File("resources/user.json");
+        try {
+            if (!userJSON.exists()) {
+                folder.mkdir();
+                userJSON.createNewFile();
+            }
+        } catch (Exception e) {
+            System.err.println(e);
+        }
     }
 }
