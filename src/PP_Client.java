@@ -39,27 +39,11 @@ class sendMessage extends Thread {
             DatagramSocket UDPsocket = new DatagramSocket();
             DatagramPacket UDPpacket;
 
-            // 文件操作相关的类
-            File folder = new File("resources");
-            File log = new File("resources/log.json");
-            FileInputStream readLog;
-            FileOutputStream writeLog;
-
             // Json相关的类
             JSONObject jsonObject;
-            JSONObject logJson;
 
             // 自定义类，详细请参考src/log/Manager.java
             Manager manager;
-
-            // 检查log.json
-            if (!log.exists()) {
-                folder.mkdir();
-                log.createNewFile();
-                writeLog = new FileOutputStream("resources/log.json");
-                writeLog.write("{\"data\":[]}".getBytes());
-                writeLog.close();
-            }
 
             // 创建JSON对象
             time = new SimpleDateFormat().format(new Date());
@@ -75,23 +59,18 @@ class sendMessage extends Thread {
             // 发送数据
             UDPsocket.send(UDPpacket);
 
-            // 读本地Json
-            readLog = new FileInputStream("resources/log.json");
-            readLog.read(buf);
-            readLog.close();
-            logJson = new JSONObject(new String(buf));
+            // 检查json
+            manager = new Manager(user.getName());
+            manager.check("log.json");
 
-            // 编辑本地Json
-            System.out.println(user.getName());
-            System.out.println(time);
-            System.out.println(content);
-            manager = new Manager(user.getName(), logJson);
-            manager.add(time, content);
+            // 读Json
+            manager.read("log.json");
 
-            // 写数据
-            writeLog = new FileOutputStream(log);
-            writeLog.write(logJson.toString(4).getBytes());
-            writeLog.close();
+            // 编辑Json
+            manager.add(1, time, content);
+
+            // 写Json
+            manager.write("log.json");
         } catch (Exception e) {
             System.err.println(e);
         }
@@ -99,11 +78,24 @@ class sendMessage extends Thread {
 
 }
 
+// 向服务器请求更新
+class update extends Thread {
+    @Override
+    public void run() {
+        // 自定义类，详细请参考src/log/Manager.java
+        Manager manager;
+
+        // 检查log.json
+        manager = new Manager();
+        manager.check("log.json");
+
+    }
+}
+
 public class PP_Client {
     public static void main(String args[]) {
-        User user = new User();
         String content = "你好";
-        sendMessage mySendM = new sendMessage(user, content);
+        sendMessage mySendM = new sendMessage(new User(), content);
         mySendM.start();
     }
 }

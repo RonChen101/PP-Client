@@ -1,6 +1,7 @@
 package user;
 
 import java.io.*;
+import log.Manager;
 
 interface userInterface {
     public abstract String getName();
@@ -15,10 +16,6 @@ public class User implements userInterface {
 
     public User() {
         this.userName = null;
-    }
-
-    public User(String name) {
-        this.userName = name;
     }
 
     // 获取用户名
@@ -37,7 +34,9 @@ public class User implements userInterface {
         if (userName != null) {
             return true;
         } else {
-            checkJson();
+            Manager manager;
+            manager = new Manager();
+            manager.check("user.json");
             byte[] buf = new byte[1000];
             try {
                 File userJSON = new File("resources/user.json");
