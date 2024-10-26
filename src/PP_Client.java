@@ -1,10 +1,12 @@
-import java.net.*;
-import user.User;
-import java.util.*;
 import org.json.JSONObject;
-import java.io.*;
+
+import java.net.*;
+import java.text.SimpleDateFormat;
+import java.util.*;
+
 import gui.window;
 import json.Manager;
+import user.User;
 
 // 向服务器发送消息，保存到log.json文件中
 class sendMessage extends Thread {
@@ -31,11 +33,14 @@ class sendMessage extends Thread {
             DatagramSocket UDPsocket = new DatagramSocket();
             DatagramPacket UDPpacket;
 
+            // 时间格式化类
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+
             // 自定义类，详细请参考src/log/Manager.java
             Manager message, manager;
 
             // 创建UDP数据包
-            message = new Manager(user.getName(), new Date().toString(), content);
+            message = new Manager(user.getName(), simpleDateFormat.format(new Date()), content);
             UDPpacket = new DatagramPacket(
                     message.json.toString().getBytes(),
                     message.json.toString().getBytes().length,
