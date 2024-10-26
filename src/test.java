@@ -1,3 +1,4 @@
+
 import log.Manager;
 
 public class test {
@@ -6,5 +7,3 @@ public class test {
         manager.read("log.json");
         manager.extract();
         System.out.println(manager.json.toString(4));
-    }
-}
