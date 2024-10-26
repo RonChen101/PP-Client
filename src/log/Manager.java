@@ -75,6 +75,16 @@ public class Manager {
         }
     }
 
+    // 提取时间
+    public void extract() {
+
+    }
+
+    // 合并两个json
+    public void merge(JSONObject j) {
+
+    }
+
     // 读Json
     public void read(String fileName) {
         FileInputStream readJson;
