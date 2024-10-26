@@ -95,7 +95,8 @@ class update extends Thread {
 public class PP_Client {
     public static void main(String args[]) {
         String content = "你好";
-        sendMessage mySendM = new sendMessage(new User(), content);
+        sendMessage mySendM;
+        mySendM = new sendMessage(new User(), content);
         mySendM.start();
     }
 }

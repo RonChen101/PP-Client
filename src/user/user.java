@@ -57,6 +57,7 @@ public class User implements userInterface {
         return false;
     }
 
+    // 待完善
     // 设置用户名
     @Override
     public boolean setName(String name) {
