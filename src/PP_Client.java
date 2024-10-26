@@ -28,12 +28,6 @@ class sendMessage extends Thread {
                 System.exit(1);
             }
 
-            // 时间
-            Date time;
-
-            // 缓冲区
-            byte[] buf = new byte[10000];
-
             // UDP相关的类
             DatagramSocket UDPsocket = new DatagramSocket();
             DatagramPacket UDPpacket;
@@ -86,9 +80,7 @@ class update extends Thread {
 
 public class PP_Client {
     public static void main(String args[]) {
-        String content = "大家好";
-        sendMessage mySendM;
-        mySendM = new sendMessage(new User(), content);
-        mySendM.start();
+        sendMessage mySend = new sendMessage(new User(), "大家好");
+        mySend.start();
     }
 }
