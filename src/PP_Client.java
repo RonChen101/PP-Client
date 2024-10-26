@@ -3,7 +3,6 @@ import user.User;
 import java.util.*;
 import org.json.JSONObject;
 import java.io.*;
-
 import gui.window;
 import json.Manager;
 
@@ -106,10 +105,17 @@ class update extends Thread {
                 UDPpacket = new DatagramPacket(buf, buf.length);
                 UDPsocket.receive(UDPpacket);
 
+                // 检查文件
+                manager.check("log.json");
+
+                // 读取文件
+                manager.read("log.json");
+
                 // 合并
                 manager.merge(new JSONObject(buf.toString()));
 
-                // 写文件
+                // 写入文件
+                manager.write("log.json");
 
                 sleep(1000);
             }
