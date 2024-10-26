@@ -81,10 +81,10 @@ class update extends Thread {
             // 缓冲区
             byte[] buf = new byte[10000];
 
-            // 检查log.json
-            message.check("log.json");
-
             while (true) {
+                // 检查log.json
+                message.check("log.json");
+
                 // 读Json
                 message.read("log.json");
 
@@ -116,10 +116,7 @@ class update extends Thread {
 
                 // 写入文件
                 manager.write("log.json");
-
-                sleep(1000);
             }
-
         } catch (Exception e) {
             System.err.println(e);
         }
@@ -129,7 +126,16 @@ class update extends Thread {
 
 public class PP_Client {
     public static void main(String args[]) {
-        sendMessage mySend = new sendMessage(new User(), "大家好");
-        mySend.start();
+        Scanner scanner = new Scanner(System.in);
+
+        sendMessage mySendMessage;
+        update myUpdate = new update();
+        myUpdate.start();
+
+        while (true) {
+            System.out.print("发送：");
+            mySendMessage = new sendMessage(new User(), scanner.nextLine());
+            mySendMessage.start();
+        }
     }
 }
