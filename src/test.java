@@ -1,10 +1,10 @@
-import java.util.Date;
-import java.text.SimpleDateFormat;
+import log.Manager;
 
 public class test {
     public static void main(String[] args) throws Exception {
-        Date date = new SimpleDateFormat().parse("2024/10/25 22:20");
-        Date req = new SimpleDateFormat().parse("2024/11/24 22:11");
-        System.out.println(date.after(req));
+        Manager manager = new Manager();
+        manager.read("log.json");
+        manager.extract();
+        System.out.println(manager.json.toString(4));
     }
 }

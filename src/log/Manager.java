@@ -16,7 +16,7 @@ import java.io.*;
 
 public class Manager {
     private String name;
-    private JSONObject json;
+    public JSONObject json;
 
     public Manager() {
         this.name = null;
@@ -77,7 +77,26 @@ public class Manager {
 
     // 提取时间
     public void extract() {
+        // 原始数据，data数组
+        JSONArray data = json.getJSONArray("data");
 
+        // 临时data数组
+        JSONArray tempDataArray = new JSONArray();
+
+        // 提取
+        for (int i = 0; i < data.length(); i++) {
+
+            // 保存单条data数据
+            tempDataArray.put(
+                    (new JSONObject()
+                            .put("userName", new JSONObject(data.getJSONObject(i).toString()).getString("userName")))
+                            .put("log", new JSONArray()
+                                    .put(data.getJSONObject(i).getJSONArray("log").getJSONObject(
+                                            data.getJSONObject(i).getJSONArray("log").length() - 1))));
+        }
+        JSONObject resultJson = new JSONObject();
+        resultJson.put("data", tempDataArray);
+        json = resultJson;
     }
 
     // 合并两个json
@@ -86,7 +105,7 @@ public class Manager {
     }
 
     // 读Json
-    public void read(String fileName) {
+    public JSONObject read(String fileName) {
         FileInputStream readJson;
         byte[] buf = new byte[10000];
         try {
@@ -97,6 +116,7 @@ public class Manager {
             System.err.println(e);
         }
         this.json = new JSONObject(new String(buf));
+        return json;
     }
 
     // 设置名字
