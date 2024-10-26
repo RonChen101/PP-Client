@@ -68,12 +68,55 @@ class sendMessage extends Thread {
 class update extends Thread {
     @Override
     public void run() {
-        // 自定义类，详细请参考src/log/Manager.java
-        Manager manager;
+        try {
 
-        // 检查log.json
-        manager = new Manager();
-        manager.check("log.json");
+            // 自定义类，详细请参考src/log/Manager.java
+            Manager manager = new Manager(), message = new Manager();
+
+            // 创建UDP_socket
+            DatagramSocket UDPsocket = new DatagramSocket();
+
+            // 创建UDP数据包
+            DatagramPacket UDPpacket;
+
+            // 缓冲区
+            byte[] buf = new byte[10000];
+
+            // 检查log.json
+            message.check("log.json");
+
+            while (true) {
+                // 读Json
+                message.read("log.json");
+
+                // 提取时间
+                message.extract();
+
+                // 生成数据包
+                UDPpacket = new DatagramPacket(
+                        message.json.toString().getBytes(),
+                        message.json.toString().getBytes().length,
+                        InetAddress.getByName("47.121.136.54"),
+                        6666);
+
+                // 发送数据包
+                UDPsocket.send(UDPpacket);
+
+                // 接收新数据
+                UDPpacket = new DatagramPacket(buf, buf.length);
+                UDPsocket.receive(UDPpacket);
+
+                // 合并
+                manager.merge(new JSONObject(buf.toString()));
+
+                // 写文件
+
+                sleep(1000);
+            }
+
+        } catch (Exception e) {
+            System.err.println(e);
+        }
 
     }
 }
