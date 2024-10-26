@@ -8,48 +8,23 @@
  *          描述：这个方法以name为索引，向json对象中加入新内容
  */
 
-package log;
+package json;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.io.*;
 
 public class Manager {
-    private String name;
-    private JSONObject json;
+    public JSONObject json;
 
     public Manager() {
-        this.name = null;
-        this.json = null;
+
     }
 
-    public Manager(String name) {
-        this.name = name;
-        this.json = null;
-    }
-
-    // 向json中增加新数据
-    public void add(int group, String time, String content) {
-        JSONArray data = json.getJSONArray("data");
-        JSONObject user;
-        boolean flag = true;
-        for (int i = 0; i < data.length(); i++) {
-            user = new JSONObject(data.get(i).toString());
-            if (user.getString("userName").equals(name)) {
-                user.getJSONArray("log")
-                        .put(new JSONObject("{\"time\":\"" + time + "\",\"content\":\"" + content + "\"}"));
-                flag = false;
-                data.remove(i);
-                data.put(user);
-                break;
-            }
-        }
-        if (flag) {
-            user = new JSONObject(
-                    "{\"userName\": \"" + name + "\",\"log\": [{\"time\": \"" + time
-                            + "\",\"content\": \"" + content + "\"}]}");
-            data.put(user);
-        }
+    public Manager(String name, String time, String content) {
+        json = new JSONObject(
+                "{\"data\":[{\"log\":[{\"time\":\"" + time + "\",\"content\":\"" + content + "\"}],\"userName\":\""
+                        + name + "\"}]}");
     }
 
     // 检查Json
@@ -82,11 +57,35 @@ public class Manager {
 
     // 合并两个json
     public void merge(JSONObject j) {
-
+        JSONArray jData = j.getJSONArray("data");
+        JSONArray data = json.getJSONArray("data");
+        JSONObject user, jUser;
+        boolean flag = true;
+        for (int i = 0; i < jData.length(); i++) {
+            jUser = new JSONObject(jData.getJSONObject(i).toString());
+            for (int k = 0; k < data.length(); k++) {
+                user = new JSONObject(data.getJSONObject(k).toString());
+                if (jUser.getString("userName").equals(user.getString("userName"))) {
+                    for (int l = 0; l < jUser.getJSONArray("log").length(); l++) {
+                        user.getJSONArray("log").put(jUser.getJSONArray("log").getJSONObject(l));
+                    }
+                    data.remove(k);
+                    data.put(user);
+                    k--;
+                    flag = false;
+                    break;
+                }
+            }
+            if (flag) {
+                data.put(jUser);
+            } else {
+                flag = true;
+            }
+        }
     }
 
     // 读Json
-    public void read(String fileName) {
+    public JSONObject read(String fileName) {
         FileInputStream readJson;
         byte[] buf = new byte[10000];
         try {
@@ -97,11 +96,7 @@ public class Manager {
             System.err.println(e);
         }
         this.json = new JSONObject(new String(buf));
-    }
-
-    // 设置名字
-    public void setName(String name) {
-        this.name = name;
+        return json;
     }
 
     // 写Json

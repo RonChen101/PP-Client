@@ -1,10 +1,10 @@
-import java.util.Date;
-import java.text.SimpleDateFormat;
+import org.json.JSONObject;
+
+import json.Manager;
 
 public class test {
     public static void main(String[] args) throws Exception {
-        Date date = new SimpleDateFormat().parse("2024/10/25 22:20");
-        Date req = new SimpleDateFormat().parse("2024/11/24 22:11");
-        System.out.println(date.after(req));
+        Manager temp = new Manager("罗钟琛", "时间", "我是罗钟琛");
+        System.out.println(temp.json.toString(4));
     }
 }
