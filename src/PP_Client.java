@@ -62,7 +62,7 @@ class sendMessage extends Thread {
             // 写Json
             manager.write("log.json");
         } catch (Exception e) {
-            System.err.println(e);
+            System.err.println("sendMassage" + e);
         }
     }
 
@@ -117,10 +117,13 @@ class update extends Thread {
                 manager.read("log.json");
 
                 // 合并
-                manager.merge(new JSONObject(buf.toString()));
+                manager.merge(new JSONObject(new String(buf)));
 
                 // 写入文件
                 manager.write("log.json");
+
+                // 休眠
+                sleep(1000);
             }
         } catch (Exception e) {
             System.err.println(e);

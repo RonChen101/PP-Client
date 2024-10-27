@@ -46,7 +46,7 @@ public class Manager {
                 }
             }
         } catch (Exception e) {
-            System.err.println(e);
+            System.err.println("check" + e);
         }
     }
 
@@ -60,14 +60,16 @@ public class Manager {
 
         // 提取
         for (int i = 0; i < data.length(); i++) {
-
-            // 保存单条data数据
-            tempDataArray.put(
-                    (new JSONObject()
-                            .put("userName", new JSONObject(data.getJSONObject(i).toString()).getString("userName")))
-                            .put("log", new JSONArray()
-                                    .put(data.getJSONObject(i).getJSONArray("log").getJSONObject(
-                                            data.getJSONObject(i).getJSONArray("log").length() - 1))));
+            if (data.getJSONObject(i).getJSONArray("log").length() > 0) {
+                // 保存单条data数据
+                tempDataArray.put(
+                        (new JSONObject()
+                                .put("userName",
+                                        new JSONObject(data.getJSONObject(i).toString()).getString("userName")))
+                                .put("log", new JSONArray()
+                                        .put(data.getJSONObject(i).getJSONArray("log").getJSONObject(
+                                                data.getJSONObject(i).getJSONArray("log").length() - 1))));
+            }
         }
         JSONObject resultJson = new JSONObject();
         resultJson.put("data", tempDataArray);
@@ -126,7 +128,7 @@ public class Manager {
             writeJson.write(json.toString(4).getBytes());
             writeJson.close();
         } catch (Exception e) {
-            System.err.println(e);
+            System.err.println("write" + e);
         }
     }
 }
