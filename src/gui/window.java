@@ -229,7 +229,7 @@ public class Window {
             temp4.setMaximumSize(new Dimension(Integer.MAX_VALUE, 20));
 
             logJPanel.add(temp1);
-
+            logJPanel.add(temp2);
             logJPanel.add(temp3);
             logJPanel.add(temp4);
 
