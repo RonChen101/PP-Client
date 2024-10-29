@@ -3,16 +3,25 @@ package communication;
 import org.json.*;
 
 import java.net.*;
+import javax.swing.*;
 
 import json.Manager;
+import gui.Window;
 
 public class Update extends Thread {
+    private JPanel logJPanel;
+
+    public Update(JPanel logJPanel) {
+        this.logJPanel = logJPanel;
+    }
+
     @Override
     public void run() {
         try {
 
-            // 自定义类，详细请参考src/log/Manager.java
+            // 自定义类
             Manager manager = new Manager(), message = new Manager();
+            Window window = new Window();
 
             // 创建UDP_socket
             DatagramSocket UDPsocket = new DatagramSocket();
@@ -58,6 +67,10 @@ public class Update extends Thread {
 
                 // 写入文件
                 manager.write("log.json");
+
+                // 刷新聊天框
+                window.log(logJPanel);
+                System.out.println(1);
 
                 // 休眠
                 sleep(1000);

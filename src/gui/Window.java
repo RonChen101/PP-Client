@@ -66,6 +66,8 @@ public class Window {
         logJPanel.setLayout(new BoxLayout(logJPanel, BoxLayout.Y_AXIS));
         JScrollPane logJScrollPane = new JScrollPane(logJPanel);
         log(logJPanel);
+        Update update = new Update(logJPanel);
+        update.start();
 
         // 添加组件
         jFrame.add(userJPanel, gbc1);
