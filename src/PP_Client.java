@@ -4,7 +4,7 @@ import java.net.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import gui.window;
+import gui.Window;
 import json.Manager;
 import user.User;
 
