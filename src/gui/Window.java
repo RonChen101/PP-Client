@@ -93,12 +93,7 @@ public class Window {
 
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
                     return;
-                } else {
-                    System.err.println(inputTextField.getText());
-                    SendMessage sendMessage = new SendMessage(inputTextField.getText());
-                    sendMessage.start();
                 }
-
             }
 
         });
