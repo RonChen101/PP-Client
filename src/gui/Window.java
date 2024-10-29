@@ -1,6 +1,7 @@
 package gui;
 
 import javax.swing.*;
+import javax.swing.Timer;
 import java.awt.*;
 import java.awt.event.*;
 import java.text.*;
@@ -11,12 +12,14 @@ import json.Manager;
 import user.User;
 import communication.*;
 
-public class Window {
+public enum Window {
+    Instance;
+
+    private JFrame jFrame = new JFrame("PP");
+    private JScrollPane logJScrollPane;
 
     // 创建主窗口
     public void start() {
-        // 创建JFrame
-        JFrame jFrame = new JFrame("PP");
         jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         jFrame.setSize(800, 600);
 
@@ -27,52 +30,53 @@ public class Window {
         GridBagConstraints gbc1 = new GridBagConstraints();
         gbc1.gridx = 0;
         gbc1.gridy = 0;
-        // 横跨五行
         gbc1.weightx = 1;
         gbc1.gridheight = 5;
-        // 填充全部区域
         gbc1.fill = GridBagConstraints.BOTH;
 
         // 设置聊天记录框位置
         GridBagConstraints gbc2 = new GridBagConstraints();
         gbc2.gridx = 1;
         gbc2.gridy = 0;
-        // 横跨四列，两行
         gbc2.weightx = 4;
         gbc2.weighty = 4;
-        // 填充全部区域
         gbc2.fill = GridBagConstraints.BOTH;
 
         // 设置文本框位置
         GridBagConstraints gbc3 = new GridBagConstraints();
         gbc3.gridx = 1;
         gbc3.gridy = 3;
-        // 横跨四列，两行
         gbc3.weightx = 4;
         gbc3.weighty = 1;
-        // 填充全部区域
         gbc3.fill = GridBagConstraints.BOTH;
 
         // 创建文本输入框面板、用户名面板
         JPanel inputSendJPanel = new JPanel();
         JPanel userJPanel = new JPanel();
 
-        // 在面板中添加组件
-        inputSendBox(inputSendJPanel);
-        displayUser(userJPanel);
-
         // 显示消息
         JPanel logJPanel = new JPanel();
         logJPanel.setLayout(new BoxLayout(logJPanel, BoxLayout.Y_AXIS));
-        JScrollPane logJScrollPane = new JScrollPane(logJPanel);
+        logJScrollPane = new JScrollPane(logJPanel);
+
+        // 在面板中添加组件
+        displayUser(userJPanel);
         log(logJPanel);
-        Update update = new Update(logJPanel);
-        update.start();
+        inputSendBox(inputSendJPanel);
 
         // 添加组件
         jFrame.add(userJPanel, gbc1);
         jFrame.add(logJScrollPane, gbc2);
         jFrame.add(inputSendJPanel, gbc3);
+
+        Timer timer = new Timer(1000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                refresh();
+            }
+        });
+
+        timer.start();
 
         // 设置可见
         jFrame.setVisible(true);
@@ -90,15 +94,9 @@ public class Window {
         inputTextField.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
-
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
                     return;
-                } else {
-                    System.err.println(inputTextField.getText());
-                    SendMessage sendMessage = new SendMessage(inputTextField.getText());
-                    sendMessage.start();
                 }
-
             }
 
         });
@@ -234,7 +232,27 @@ public class Window {
             logJPanel.add(temp2);
             logJPanel.add(temp3);
             logJPanel.add(temp4);
-
         }
+    }
+
+    public void refresh() {
+        jFrame.remove(logJScrollPane);
+
+        // 设置聊天记录框位置
+        GridBagConstraints gbc2 = new GridBagConstraints();
+        gbc2.gridx = 1;
+        gbc2.gridy = 0;
+        gbc2.weightx = 4;
+        gbc2.weighty = 4;
+        gbc2.fill = GridBagConstraints.BOTH;
+
+        JPanel logJPanel = new JPanel();
+        logJPanel.setLayout(new BoxLayout(logJPanel, BoxLayout.Y_AXIS));
+        logJScrollPane = new JScrollPane(logJPanel);
+        log(logJPanel);
+
+        jFrame.add(logJScrollPane, gbc2);
+
+        jFrame.revalidate();
     }
 }
