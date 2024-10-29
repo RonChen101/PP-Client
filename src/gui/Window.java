@@ -92,7 +92,13 @@ public class Window {
             public void keyReleased(KeyEvent e) {
 
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    return;
+                    if (inputTextField.getText().length() == 0) {
+                        return;
+                    } else {
+                        SendMessage sendMessage = new SendMessage(inputTextField.getText());
+                        sendMessage.start();
+                        inputTextField.setText("");
+                    }
                 }
             }
 
@@ -115,6 +121,8 @@ public class Window {
                 } else {
                     SendMessage sendMessage = new SendMessage(inputTextField.getText());
                     sendMessage.start();
+                    inputTextField.setText("");
+
                 }
             }
         });
