@@ -2,25 +2,137 @@ package gui;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.*;
 import java.text.*;
 import java.util.*;
 
 import org.json.*;
 import json.Manager;
 import user.User;
+import communication.*;
 
 public class Window {
+
+    // 创建主窗口
     public void start() {
         // 创建JFrame
         JFrame jFrame = new JFrame("PP");
         jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         jFrame.setSize(800, 600);
 
+        // 将主界面划分成5*5网格
+        jFrame.setLayout(new GridBagLayout());
+
+        // 设置用户名位置
+        GridBagConstraints gbc2 = new GridBagConstraints();
+        gbc2.gridx = 0;
+        gbc2.gridy = 0;
+        // 横跨五行
+        gbc2.gridheight = 5;
+        // 填充全部区域
+        gbc2.fill = GridBagConstraints.BOTH;
+
+        // 设置文本框位置
+        GridBagConstraints gbc1 = new GridBagConstraints();
+        gbc1.gridx = 2;
+        gbc1.gridy = 4;
+        // 横跨四列，两行
+        gbc1.weightx = 4;
+        gbc1.weighty = 2;
+        // 填充全部区域
+        gbc1.fill = GridBagConstraints.BOTH;
+
+        // 创建文本输入框面板、用户名面板
+        JPanel inputSendJPanel = new JPanel();
+        JPanel userJPanel = new JPanel();
+
+        // 在面板中添加组件
+        inputSendBox(inputSendJPanel);
+        displayUser(userJPanel);
+
         // 显示消息
         JPanel logJPanel = new JPanel();
         logJPanel.setLayout(new BoxLayout(logJPanel, BoxLayout.Y_AXIS));
         JScrollPane logJScrollPane = new JScrollPane(logJPanel);
+        log(logJPanel);
 
+        // 添加组件
+        jFrame.add(logJScrollPane);
+        jFrame.add(inputSendJPanel, gbc1);
+        jFrame.add(userJPanel, gbc2);
+
+        // 设置可见
+        jFrame.setVisible(true);
+    }
+
+    // 创建文本输入框和按钮
+    public void inputSendBox(JPanel inputSendJPanel) {
+        JPanel inputJPanel = new JPanel();
+        JPanel sendJPanel = new JPanel();
+
+        // 文本框
+        JTextField inputTextField = new JTextField(20);
+
+        // 监听键盘输入事件
+        inputTextField.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    return;
+                } else {
+                    System.err.println(inputTextField.getText());
+                    SendMessage sendMessage = new SendMessage(inputTextField.getText());
+                    sendMessage.start();
+                }
+
+            }
+
+        });
+
+        inputJPanel.add(inputTextField);
+
+        // 创建发送按钮
+        JButton jButtonsend = new JButton("发送");
+
+        // 设置按钮颜色
+        jButtonsend.setBackground(Color.pink);
+
+        // 发送按钮绑定监听
+        jButtonsend.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (inputTextField.getText().length() == 0) {
+                    return;
+                } else {
+                    SendMessage sendMessage = new SendMessage(inputTextField.getText());
+                    sendMessage.start();
+                }
+            }
+        });
+
+        sendJPanel.add(jButtonsend);
+
+        // 往面板中添加文本框组件
+        inputSendJPanel.add(inputJPanel);
+        inputSendJPanel.add(sendJPanel);
+    }
+
+    public void displayUser(JPanel jPanelUser) {
+        Manager user = new Manager();
+        user.check("user.json");
+        user.read("user.json");
+
+        // 创建标签
+        JLabel JLabelUser = new JLabel(
+                new JSONObject(user.json.getJSONArray("data").get(0).toString()).getString("userName"));
+
+        // 把标签放入面板
+        jPanelUser.add(JLabelUser);
+
+    }
+
+    public void log(JPanel logJPanel) {
         // 读log.json
         Manager log = new Manager();
         log.check("log.json");
@@ -106,18 +218,10 @@ public class Window {
             temp4.setMaximumSize(new Dimension(Integer.MAX_VALUE, 20));
 
             logJPanel.add(temp1);
-            logJPanel.add(temp2);
+
             logJPanel.add(temp3);
             logJPanel.add(temp4);
+
         }
-
-        // 添加组件
-        jFrame.add(logJScrollPane);
-
-        // 设置可见
-        jFrame.setVisible(true);
-    }
-
-    public void log(JPanel logJPanel) {
     }
 }
