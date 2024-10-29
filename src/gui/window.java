@@ -24,23 +24,34 @@ public class Window {
         jFrame.setLayout(new GridBagLayout());
 
         // 设置用户名位置
-        GridBagConstraints gbc2 = new GridBagConstraints();
-        gbc2.gridx = 0;
-        gbc2.gridy = 0;
+        GridBagConstraints gbc1 = new GridBagConstraints();
+        gbc1.gridx = 0;
+        gbc1.gridy = 0;
         // 横跨五行
-        gbc2.gridheight = 5;
+        gbc1.weightx = 1;
+        gbc1.gridheight = 5;
+        // 填充全部区域
+        gbc1.fill = GridBagConstraints.BOTH;
+
+        // 设置聊天记录框位置
+        GridBagConstraints gbc2 = new GridBagConstraints();
+        gbc2.gridx = 1;
+        gbc2.gridy = 0;
+        // 横跨四列，两行
+        gbc2.weightx = 4;
+        gbc2.weighty = 4;
         // 填充全部区域
         gbc2.fill = GridBagConstraints.BOTH;
 
         // 设置文本框位置
-        GridBagConstraints gbc1 = new GridBagConstraints();
-        gbc1.gridx = 2;
-        gbc1.gridy = 4;
+        GridBagConstraints gbc3 = new GridBagConstraints();
+        gbc3.gridx = 1;
+        gbc3.gridy = 3;
         // 横跨四列，两行
-        gbc1.weightx = 4;
-        gbc1.weighty = 2;
+        gbc3.weightx = 4;
+        gbc3.weighty = 1;
         // 填充全部区域
-        gbc1.fill = GridBagConstraints.BOTH;
+        gbc3.fill = GridBagConstraints.BOTH;
 
         // 创建文本输入框面板、用户名面板
         JPanel inputSendJPanel = new JPanel();
@@ -57,9 +68,9 @@ public class Window {
         log(logJPanel);
 
         // 添加组件
-        jFrame.add(logJScrollPane);
-        jFrame.add(inputSendJPanel, gbc1);
-        jFrame.add(userJPanel, gbc2);
+        jFrame.add(userJPanel, gbc1);
+        jFrame.add(logJScrollPane, gbc2);
+        jFrame.add(inputSendJPanel, gbc3);
 
         // 设置可见
         jFrame.setVisible(true);
